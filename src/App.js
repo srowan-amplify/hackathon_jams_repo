@@ -14,7 +14,7 @@ class App extends Component {
       melodyNote: 0, // the index of the last-played note in the melody
       emotion: '', // the desired emotion of the music
       genre: '', // the desired genre of the music
-      instrument: 'acousticGuitar',
+      instrument: 'banjo',
     }
 
     this.onBeat = 0;
@@ -61,10 +61,13 @@ class App extends Component {
 
   // begin playing music!
   startMusic = () => {
-    this.stopSound();
-    this.onBeatTimer = setInterval(() => {
-      this.playNote();
-    }, this.onBeat);
+    if(this.state.emotion !== '')
+    {
+      this.stopSound();
+      this.onBeatTimer = setInterval(() => {
+        this.playNote();
+      }, this.onBeat);
+    }
   }
 
   // stops all current intervals so sound stops
