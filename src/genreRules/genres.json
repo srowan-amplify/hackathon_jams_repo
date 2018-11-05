@@ -1,6 +1,14 @@
 {
-  "folk": {
-    "bpm": [63, 90],
-    "instruments": [],
+  "pop": {
+    "bpm": [100, 130],
+    "instrument": "electricGuitar"
   },
+  "country": {
+    "bpm": [60, 90],
+    "instrument": "acousticGuitar"
+  },
+  "experimental": {
+    "bpm": [60, 130],
+    "instrument": "banjo"
+  }
 }
