@@ -10,20 +10,24 @@ import genres from './genreRules/genres.json';
 
 const genreList = ['pop', 'country', 'experimental'];
 let genreIndex = 0;
+let drumIndex = 0;
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       melodyNote: 0, // the index of the last-played note in the melody
-      emotion: '', // the desired emotion of the music
+      emotion: 'happy', // the desired emotion of the music
       genre: genreList[genreIndex], // the desired genre of the music
       instrument: genres[genreList[genreIndex]].instrument,
+      drumLine: [null], // an array representing on which beats to play which instruments
     }
 
     this.onBeat = 0;
     this.onBeatTimer = null;
-    this.testAudio = null;
+
+    this.audio = null;
+    this.drumAudio = null;
   }
 
   componentDidMount = () => {
@@ -42,10 +46,57 @@ class App extends Component {
     this.audio.play();
   }
 
+  playDrum = () => {
+    console.log("trying to drum...");
+    console.log(this.state.drumLine[drumIndex] + " " + drumIndex);
+    if(this.state.drumLine[drumIndex] !== null)
+    {
+      this.drumAudio = new Audio(
+        audioMap[this.state.drumLine[drumIndex]][0].note,
+        'drum',
+        {onend: null}
+      );
+      this.drumAudio.play();
+    }
+
+    drumIndex++;
+    if(drumIndex === this.state.drumLine.length)
+      drumIndex = 0;
+  }
+
   switchEmotion = (emotion) => {
     console.log("switching emotion! " + emotion);
     this.stopSound();
     this.setState({emotion: emotion});
+  }
+
+  // creates an array indicating on which beats to play which drum sound
+  // repeats for the duration of the music
+  setDrumLine = () => {
+    console.log('setting drum line');
+    let drumArray = [null];
+    switch(this.state.genre)
+    {
+      case 'country':
+      {
+        drumArray = ['shaker', 'shaker', 'shaker', 'shaker'];
+        break;
+      }
+      case 'pop':
+      {
+        drumArray = ['eDrum', null, 'eDrum', 'eDrum', null];
+        break;
+      }
+      case 'experimental':
+      {
+
+        break;
+      }
+      default:
+        break;
+    }
+    console.log("reached setstate: " + drumArray);
+    this.setState({drumLine: drumArray});
   }
 
   // select a random BPM for the music every time a relevant field is changed
@@ -64,8 +115,12 @@ class App extends Component {
     if(this.state.emotion !== '')
     {
       this.stopSound();
+
+      this.setBPM();
+      this.setDrumLine();
       this.onBeatTimer = setInterval(() => {
         this.playNote();
+        this.playDrum();
       }, this.onBeat);
     }
   }
@@ -89,7 +144,6 @@ class App extends Component {
       genre: genreList[genreIndex],
       instrument: genres[genreList[genreIndex]].instrument,
     });
-    this.setBPM();
   }
 
   // shift the genre option one to the right in the genreList array.
@@ -106,7 +160,6 @@ class App extends Component {
       genre: genreList[genreIndex],
       instrument: genres[genreList[genreIndex]].instrument,
     });
-    this.setBPM();
   }
 
   render = () => (
@@ -133,13 +186,22 @@ class App extends Component {
 
       <View>
         <TouchableOpacity onPress={()=> {this.switchEmotion('happy');}}>
-          <Image source={imageMap.happyButton} style={[styles.moodButton, {left: 337}]} />
+          <Image
+            source={this.state.emotion === 'happy' ? imageMap.happyButtonPressed : imageMap.happyButton}
+            style={[styles.moodButton, {left: 337}]}
+          />
         </TouchableOpacity>
         <TouchableOpacity onPress={()=> {this.switchEmotion('curious');}}>
-          <Image source={imageMap.curiousButton} style={[styles.moodButton, {left: 468}]} />
+          <Image
+            source={this.state.emotion === 'curious' ? imageMap.curiousButtonPressed : imageMap.curiousButton}
+            style={[styles.moodButton, {left: 468}]}
+          />
         </TouchableOpacity>
         <TouchableOpacity onPress={()=> {this.switchEmotion('surprised');}}>
-          <Image source={imageMap.surprisedButton} style={[styles.moodButton, {left: 602}]} />
+          <Image
+            source={this.state.emotion === 'surprised' ? imageMap.surprisedButtonPressed : imageMap.surprisedButton}
+            style={[styles.moodButton, {left: 602}]} 
+          />
         </TouchableOpacity>
       </View>
     </View>

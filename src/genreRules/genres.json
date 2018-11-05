@@ -1,14 +1,14 @@
 {
   "pop": {
-    "bpm": [100, 130],
+    "bpm": [110, 140],
     "instrument": "electricGuitar"
   },
   "country": {
-    "bpm": [60, 90],
+    "bpm": [68, 100],
     "instrument": "acousticGuitar"
   },
   "experimental": {
-    "bpm": [60, 130],
+    "bpm": [150, 200],
     "instrument": "banjo"
   }
 }

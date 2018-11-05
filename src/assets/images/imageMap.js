@@ -7,6 +7,9 @@ const imageMap = {
   surprisedButton: require('./surprised-button.png'),
   happyButton: require('./happy-button.png'),
   curiousButton: require('./curious-button.png'),
+  surprisedButtonPressed: require('./surprised-button-pressed.png'),
+  happyButtonPressed: require('./happy-button-pressed.png'),
+  curiousButtonPressed: require('./curious-button-pressed.png'),
   // arrow buttons
   leftButton: require('./left-arrow.png'),
   rightButton: require('./right-arrow.png'),

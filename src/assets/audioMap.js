@@ -74,6 +74,11 @@ const audioMap = {
     {note: require('./eDrums/eKick.mp3')},
     {note: require('./eDrums/eSnare.mp3')},
   ],
+
+  shaker: [
+    {note: require('./shaker.mp3')},
+    {note: require('./shaker.mp3')},
+  ],
 };
 
 export default audioMap;
