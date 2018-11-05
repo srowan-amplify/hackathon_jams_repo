@@ -12,6 +12,8 @@ const genreList = ['pop', 'country', 'experimental'];
 let genreIndex = 0;
 let drumIndex = 0;
 
+let noteIndex = 0;
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -34,9 +36,40 @@ class App extends Component {
     this.setBPM();
   }
 
+  // a more directed random for happy tunes
+  playHappyNote = () => {
+    console.log("playing happy notes");
+    let randomNote;
+    if(noteIndex < emotions[this.state.emotion].length - 1)
+    {
+      noteIndex = Math.floor(Math.random() * (emotions[this.state.emotion].length - noteIndex) + noteIndex);
+      randomNote = emotions[this.state.emotion][noteIndex];
+    }
+    else
+    {
+      noteIndex = Math.floor(Math.random() * emotions[this.state.emotion].length);
+      randomNote = emotions[this.state.emotion][noteIndex];
+    }
+
+    console.log(noteIndex);
+
+      this.audio = new Audio(
+        audioMap[this.state.instrument][randomNote].note,
+        'note',
+        {onend: null}
+      );
+
+      this.audio.play();
+  }
+
   playNote = () => {
+    if(this.state.emotion === 'happy')
+    {
+      this.playHappyNote();
+      return;
+    }
     const randomNote = emotions[this.state.emotion][Math.floor(Math.random() * emotions[this.state.emotion].length)]; // audioMap[this.state.instrument].length);
-    console.log("note: " + randomNote);
+
     this.audio = new Audio(
       audioMap[this.state.instrument][randomNote].note,
       'note',
@@ -47,8 +80,6 @@ class App extends Component {
   }
 
   playDrum = () => {
-    console.log("trying to drum...");
-    console.log(this.state.drumLine[drumIndex] + " " + drumIndex);
     if(this.state.drumLine[drumIndex] !== null)
     {
       this.drumAudio = new Audio(
@@ -73,7 +104,7 @@ class App extends Component {
   // creates an array indicating on which beats to play which drum sound
   // repeats for the duration of the music
   setDrumLine = () => {
-    console.log('setting drum line');
+    drumIndex = 0;
     let drumArray = [null];
     switch(this.state.genre)
     {
@@ -95,13 +126,21 @@ class App extends Component {
       default:
         break;
     }
-    console.log("reached setstate: " + drumArray);
     this.setState({drumLine: drumArray});
   }
 
   // select a random BPM for the music every time a relevant field is changed
   setBPM = () => {
     const bpmRange = genres[this.state.genre].bpm;
+    /* if(this.state.emotion === 'happy')
+    {
+      bpmRange[0] += ((bpmRange[1] - bpmRange[0]) / 2);
+      console.log(bpmRange);
+    }
+    else if(this.state.emotion === 'curious')
+    {
+      bpmRange[1] = bpmRange[1] - ((bpmRange[1] - bpmRange[0]) / 2);
+    }*/
     // random BPM within range
     let milisecondBpm = Math.floor(Math.random() * (bpmRange[1] - bpmRange[0])) + bpmRange[0];
     console.log(milisecondBpm + " bpm");
@@ -200,7 +239,7 @@ class App extends Component {
         <TouchableOpacity onPress={()=> {this.switchEmotion('surprised');}}>
           <Image
             source={this.state.emotion === 'surprised' ? imageMap.surprisedButtonPressed : imageMap.surprisedButton}
-            style={[styles.moodButton, {left: 602}]} 
+            style={[styles.moodButton, {left: 602}]}
           />
         </TouchableOpacity>
       </View>
